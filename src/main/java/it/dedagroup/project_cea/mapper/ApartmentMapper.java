@@ -47,8 +47,14 @@ public class ApartmentMapper {
 		response.setId(a.getId());
 		response.setUnitNumber(a.getUnitNumber());
 		response.setFloorNumber(a.getFloorNumber());
-		response.setCustomerName(a.getCustomer().getName());
-		response.setCustomerSurname(a.getCustomer().getSurname());
+		if(response.getCustomerName()==null){
+			response.setCustomerName("");
+		} else response.setCustomerName(a.getCustomer().getName());
+		//response.setCustomerName(a.getCustomer().getName());
+		if(response.getCustomerSurname()==null){
+			response.setCustomerSurname("");
+		} else response.setCustomerSurname(a.getCustomer().getSurname());
+		//response.setCustomerSurname(a.getCustomer().getSurname());
 		return response;
 	}
 
@@ -85,6 +91,8 @@ public class ApartmentMapper {
 	public List<Apartment> fromListDtoToApartmentList(List<AddApartmentForAddCondominiumDTORequest> requestList){
 		return requestList.stream().map(this::fromAddApartmentForAddCondominiumDTORequestToApartment).toList();
 	}
+
+
 
 
 }

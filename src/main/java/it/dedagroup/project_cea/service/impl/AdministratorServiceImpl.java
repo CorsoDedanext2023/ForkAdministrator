@@ -9,6 +9,8 @@ import it.dedagroup.project_cea.model.Administrator;
 import it.dedagroup.project_cea.repository.AdministratorRepository;
 import it.dedagroup.project_cea.service.def.AdministratorServiceDef;
 
+import java.util.List;
+
 @Service
 public class AdministratorServiceImpl implements AdministratorServiceDef{
 	
@@ -44,10 +46,19 @@ public class AdministratorServiceImpl implements AdministratorServiceDef{
 
 	@Override
 	public Administrator findByCondominiums_Id(long id) {
-		return administratorRepository.findByCondominiums_Id(id).orElseThrow(()-> new RuntimeException("Non esiste nessun condominio con questo id"));
+		return administratorRepository.findByCondominiums_IdAndIsAvailableTrue(id).orElseThrow(()-> new RuntimeException("Non esiste nessun condominio con questo id"));
+	}
+
+	@Override
+	public List<Administrator> testAvailable() {
+		if(administratorRepository.findAllByIsAvailableTrue()==null){
+			throw  new RuntimeException("torna null");
+		} else{
+			return administratorRepository.findAllByIsAvailableTrue();
+		}
 	}
 
 	
-	
-	
+
+
 }

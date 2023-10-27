@@ -1,5 +1,6 @@
 package it.dedagroup.project_cea.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import it.dedagroup.project_cea.dto.request.AddCondominiumDTORequest;
@@ -38,10 +39,12 @@ public class CondominiumMapper {
 		return condominiums.stream().map(this::toDto).toList();
 	}
 
+
 	public Condominium toCondominium(CondominiumDTORequest dto) {
 		Condominium c = new Condominium();
 		c.setAddress(dto.getAddress());
 		c.setAdministrator(administratorService.findById(dto.getId_administrator()));
+		c.setApartments(new ArrayList<>());
 		return c;
 	}
 
@@ -63,6 +66,7 @@ public class CondominiumMapper {
 		condominium.setApartments(apartmentMapper.fromListDtoToApartmentList(request.getApartmentList()));
 		return condominium;
 	}
+
 
 
 }

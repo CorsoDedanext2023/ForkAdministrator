@@ -4,6 +4,8 @@ package it.dedagroup.project_cea.service.def;
 
 import it.dedagroup.project_cea.model.Administrator;
 
+import java.util.List;
+
 public interface AdministratorServiceDef {
 
 	public Administrator findAdministratorById(long administrator_id);
@@ -13,4 +15,6 @@ public interface AdministratorServiceDef {
 	public Administrator updateAdministrator(Administrator administrator);
 	Administrator findById(long id);
 	public Administrator findByCondominiums_Id(long id);
+
+	public List<Administrator> testAvailable();
 }

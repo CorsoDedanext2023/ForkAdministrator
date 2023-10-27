@@ -1,5 +1,6 @@
 package it.dedagroup.project_cea.facade;
 
+
 import java.util.List;
 
 import it.dedagroup.project_cea.dto.request.*;
@@ -69,34 +70,30 @@ public class AdministratorFacade {
 	}
 
 	public AdministratorDtoResponse updateAdministrator(AdministratorUpdateDTORequest request) {
-		Administrator a = service.findById(request.getId());
-		if (request.getUsername() != null)
-			a.setUsername(request.getUsername());
-		if (request.getPassword() != null)
-			a.setPassword(request.getPassword());
+		Administrator a=service.findById(request.getId());
+		if(request.getUsername()!=null) a.setUsername(request.getUsername());
+		if(request.getPassword()!=null) a.setPassword(request.getPassword());
 		return mapper.toDto(service.updateAdministrator(a));
 	}
 
+
 	public AdministratorDtoResponse findByCondominiums_Id(long id) {
-		if (id < 0)
-			throw new RuntimeException("L'id non può essere minore di 0");
+		if(id<0) throw new RuntimeException("L'id non può essere minore di 0");
 		return mapper.toDto(service.findByCondominiums_Id(id));
 	}
 
 	public String billSplitter(long idCondominium, AceaBillRequest bill) {
-		if (idCondominium != bill.getIdCondominium())
-			throw new RuntimeException("L'id del condominio non corrisponde a quello della bolletta");
-		Condominium condominium = condominiumService.findById(idCondominium);
-		for (int i = 0; i < condominium.getApartments().size(); i++) {
-			int indexOfLastScan = condominium.getApartments().get(i).getScans().size();
-			double ApartmentConsumption = condominium.getApartments().get(i).getScans().get(indexOfLastScan - 1)
-					.getMcLiter();
-			double ApartmentAmount = bill.getCost() * (ApartmentConsumption / bill.getCondominiumConsumption());
-			Bill apartmentBill = new Bill();
+		if(idCondominium!=bill.getIdCondominium()) throw new RuntimeException("L'id del condominio non corrisponde a quello della bolletta");
+		Condominium condominium=condominiumService.findById(idCondominium);
+		for(int i=0;i<condominium.getApartments().size();i++) {
+			int indexOfLastScan=condominium.getApartments().get(i).getScans().size();
+			double ApartmentConsumption=condominium.getApartments().get(i).getScans().get(indexOfLastScan-1).getMcLiter();
+			double ApartmentAmount = bill.getCost() * ( ApartmentConsumption/ bill.getCondominiumConsumption());
+			Bill apartmentBill=new Bill();
 			apartmentBill.setCost(ApartmentAmount);
 			apartmentBill.setDeliveringDay(bill.getDeliveryDate());
 			apartmentBill.setPaymentDay(bill.getPaymentDate());
-			apartmentBill.setScan(condominium.getApartments().get(i).getScans().get(indexOfLastScan - 1));
+			apartmentBill.setScan(condominium.getApartments().get(i).getScans().get(indexOfLastScan-1));
 			billService.addBill(apartmentBill);
 		}
 		return "bollette splittate";
@@ -131,21 +128,22 @@ public class AdministratorFacade {
 				.filter(scan -> scan.isAvailable() == true).toList());
 	}
 
-	public void createCondominium(AddCondominiumDTORequest request) {
-		Condominium condominium = condominiumMapper.fromAddCondominiumDTORequestToCondominium(request);
-		for (Apartment apartment : condominium.getApartments()) {
+	public CondominiumDtoResponse createCondominium(AddCondominiumDTORequest request){
+		Condominium condominium=condominiumMapper.fromAddCondominiumDTORequestToCondominium(request);
+		for (Apartment apartment:condominium.getApartments()) {
 			apartment.setCondominium(condominium);
 		}
 		condominiumService.addCondominium(condominium);
+        CondominiumDtoResponse condominiumDtoResponse=condominiumMapper.toDto(condominium);
+        return condominiumDtoResponse;
+    }
 
-	}
-	
 	public Administrator deleteAdministrator(long id) {
 		Administrator a = administratorService.findById(id);
 		a.setAvailable(false);
 		return administratorService.updateAdministrator(a);
 	}
-	
+
 	public Condominium deleteCondominium(long id) {
 		Condominium c = condominiumService.findById(id);
 		c.setAvailable(false);
