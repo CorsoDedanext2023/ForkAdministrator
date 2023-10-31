@@ -11,4 +11,5 @@ public interface SecretaryServiceDef {
     public List<Secretary> findAllByIntervention_Technician_IdAndIsAvailableTrue(long idTechnician);
     public Secretary findById(long idSecretary);
     public Secretary findByIdAndIsAvailableTrue(long idSecretary);
+    Secretary findByUsername (String username);
 }

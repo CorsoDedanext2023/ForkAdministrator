@@ -5,5 +5,6 @@ import it.dedagroup.project_cea.model.User;
 public interface UserServiceDef {
 	
 	void addUser(User user);
+	User changePassword(User user);
 
 }

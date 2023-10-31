@@ -19,6 +19,7 @@ import it.dedagroup.project_cea.dto.request.CondominiumDTORequest;
 import it.dedagroup.project_cea.dto.request.RegisterUserDTORequest;
 import it.dedagroup.project_cea.dto.response.AdministratorDtoResponse;
 import it.dedagroup.project_cea.dto.response.ApartmentScanDTOResponse;
+import it.dedagroup.project_cea.dto.response.BillDTOResponse;
 import it.dedagroup.project_cea.dto.response.CondominiumDtoResponse;
 import it.dedagroup.project_cea.dto.response.CustomerExtendedInfoDTOResponse;
 import it.dedagroup.project_cea.mapper.AdministratorMapper;
@@ -30,6 +31,7 @@ import it.dedagroup.project_cea.mapper.ScanMapper;
 import it.dedagroup.project_cea.model.Administrator;
 import it.dedagroup.project_cea.model.Apartment;
 import it.dedagroup.project_cea.model.Bill;
+import it.dedagroup.project_cea.model.Condominium;
 import it.dedagroup.project_cea.service.def.AdministratorServiceDef;
 import it.dedagroup.project_cea.service.def.ApartmentServiceDef;
 import it.dedagroup.project_cea.service.def.BillServiceDef;
@@ -191,10 +193,13 @@ public class AdministratorFacade {
 	public Condominium deleteCondominium(long id) {
 		Condominium c = condominiumService.findById(id);
 		c.setAvailable(false);
-		List<Apartment> apartments = apartmentService.findAllApartmentByCondominiumId(id).stream().map(apartment -> {
-			apartment.setAvailable(false);
-			return apartment;
-		}).collect(Collectors.toList());
+		List<Apartment> apartments = apartmentService.findAllApartmentByCondominiumId(id);
+		if(!apartments.isEmpty() && apartments != null) {
+			apartments.stream().map(apartment -> {
+				apartment.setAvailable(false);
+				return apartment;
+			}).toList();
+		}
 		return condominiumService.updateCondominium(c);
 	}
 

@@ -48,6 +48,11 @@ public class AdministratorServiceImpl implements AdministratorServiceDef{
 		return administratorRepository.findByCondominiums_Id(id).orElseThrow(()-> new RuntimeException("Non esiste nessun condominio con questo id"));
 	}
 
+	@Override
+	public Administrator findByUsername(String username) {
+		return administratorRepository.findByUsername(username).orElse(null);
+	}
+
 	
 	
 	
