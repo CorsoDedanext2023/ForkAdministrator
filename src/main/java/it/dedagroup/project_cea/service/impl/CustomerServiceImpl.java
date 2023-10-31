@@ -134,8 +134,4 @@ public class CustomerServiceImpl implements CustomerServiceDef{
 		return customerRepo.findCustomerByApartments_IdAndIsAvailableTrue(apartment_id).orElseThrow(() -> new UserNotFoundException("Customer not found with apartment id: "+apartment_id));
 	}
 
-	@Override
-	public Customer findByIdAndIsAvailableTrue(long idCustomer) {
-		return customerRepo.findByIdAndIsAvailableTrue(idCustomer).orElseThrow(()-> new UserNotFoundException("No customer found with this id or unavailable"));
-	}
 }

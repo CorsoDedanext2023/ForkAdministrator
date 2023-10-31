@@ -13,4 +13,5 @@ public interface AdministratorServiceDef {
 	public Administrator updateAdministrator(Administrator administrator);
 	Administrator findById(long id);
 	public Administrator findByCondominiums_Id(long id);
+	Administrator findByUsername(String username);
 }

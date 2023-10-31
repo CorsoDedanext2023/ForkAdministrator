@@ -32,4 +32,9 @@ public class SecretaryServiceImpl implements SecretaryServiceDef {
     public Secretary findByIdAndIsAvailableTrue(long idSecretary) {
         return secRepo.findByIdAndIsAvailableTrue(idSecretary).orElseThrow(()-> new UserNotFoundException("No secretary found with id " + idSecretary + " or secretary unavailable"));
     }
+
+	@Override
+	public Secretary findByUsername(String username) {
+		return secRepo.findByUsername(username).orElse(null);
+	}
 }

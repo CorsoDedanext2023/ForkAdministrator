@@ -193,7 +193,7 @@ public class SecretaryFacade {
 	}
 
 	public List<BillDTOResponse> getAllBillsOfCustomer(long idCustomer){
-		custServ.findByIdAndIsAvailableTrue(idCustomer);
+		custServ.findCustomerByIdAndIsAvailableTrue(idCustomer);
 		List<Bill> billsOfCustomer = billServ.findAllBillByScan_Apartment_Customer_Id(idCustomer)
                 .stream().filter(Bill::isAvailable).toList();
 		if(billsOfCustomer.isEmpty()){
@@ -206,7 +206,7 @@ public class SecretaryFacade {
 
 	public List<InterventionDTOResponse> getAllFutureInterventionsOfCustomer(long idCustomer){
 		//se non viene trovato un cliente in db con l'id passato, viene lanciata eccezione dal service
-		custServ.findByIdAndIsAvailableTrue(idCustomer);
+		custServ.findCustomerByIdAndIsAvailableTrue(idCustomer);
 		//recupero la lista di interventi associata al cliente, filtrando e recuperando solo
 		//quelli che hanno una data successiva a quella attuale
 		List<Intervention> interventionsOfCustomer = intervServ.findAllByApartment_Customer_Id(idCustomer)
@@ -225,7 +225,7 @@ public class SecretaryFacade {
 	//dalla deliveringDay
 	public List<BillDTOResponse> getAllUnpaidBillsOfCustomer(long idCustomer){
 		//se non viene trovato un cliente in db con l'id passato, viene lanciata eccezione dal service
-		custServ.findByIdAndIsAvailableTrue(idCustomer);
+		custServ.findCustomerByIdAndIsAvailableTrue(idCustomer);
 		List<Bill> unpaidBills = billServ.findAllBillByScan_Apartment_Customer_Id(idCustomer).stream()
 				.filter(Bill::isAvailable)
 				.filter(b-> b.getPaymentDay() == null)
@@ -288,7 +288,7 @@ public class SecretaryFacade {
 		Intervention intervToUpdate = intervServ.findByIdAndIsAvailableTrue(request.getInterventionId());
 		Secretary secretaryToUpdate = secServ.findByIdAndIsAvailableTrue(request.getSecretaryId());
 		Technician techToUpdate = techService.findByIdAndIsAvailableTrue(request.getTechnicianId());
-		Apartment apartmentToUpdate = apartmentService.findByIdAndIsAvailableTrue(request.getApartmentId());
+		Apartment apartmentToUpdate = apartmentService.findApartmentByIdAndIsAvailableTrue(request.getApartmentId());
 		List<Intervention> interventionsOfThatDayOfTech = intervServ.findByTechnician_IdAndInterventionDate(techToUpdate.getId(), intervToUpdate.getInterventionDate());
 		intervToUpdate.setSecretary(secretaryToUpdate);
 		if(interventionsOfThatDayOfTech.size() >= techToUpdate.getMaxWorkload()){

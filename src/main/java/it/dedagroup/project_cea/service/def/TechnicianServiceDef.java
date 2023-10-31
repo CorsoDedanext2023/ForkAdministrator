@@ -22,4 +22,5 @@ public interface TechnicianServiceDef {
 	Technician findByNameAndSurnameAndIsAvailableTrue(String name, String surname);
 	List<Technician> findAllByIsAvailableTrue();
 	Technician findByIdAndIsAvailableTrue(long idTechnician);
+	Technician findTechnicianByUsername(String username);
 }
