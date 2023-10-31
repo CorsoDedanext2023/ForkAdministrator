@@ -35,8 +35,7 @@ public class ScanServiceImpl implements ScanServiceDef {
 	public void save(Scan scan) {
 		scanRepo.save(scan);
 	}
-	
-	
+
 	@Override
 	public void removeScan(Scan scan) {
 		scanRepo.findById(scan.getId()).orElseThrow(()->new ScanNotFoundException("Scan not found"));
@@ -53,5 +52,10 @@ public class ScanServiceImpl implements ScanServiceDef {
 	@Override
 	public List<Scan> findAllScanByCondominiumId(long condominiumId) {
 		return scanRepo.findAllByApartment_Condominium_Id(condominiumId);
+	}
+
+	@Override
+	public List<Scan> findAllScanByApartmentId(long apartmentId) {
+		return scanRepo.findAllByApartmentId(apartmentId);
 	}
 }

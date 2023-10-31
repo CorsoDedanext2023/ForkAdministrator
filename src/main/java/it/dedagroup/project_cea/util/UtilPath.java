@@ -22,7 +22,8 @@ public class UtilPath {
     public static final String FIND_ALL_PATH=TECHNICIAN_PATH+"/findAll";
     public static final String FIND_FREE_PATH=TECHNICIAN_PATH+"/findFree";
     public static final String UPDATE_PATH=TECHNICIAN_PATH+"/update";
-    public static final String REMOVE_BY_USER_PATH=TECHNICIAN_PATH+"/removeByUser";
+    public static final String REBOOK_INTERVENTION_PATH=TECHNICIAN_PATH+"/rebookIntervention";
+    public static final String REMOVE_BY_USER_PATH=TECHNICIAN_PATH+"/removeByUsername";
     public static final String REMOVE_BY_ID_PATH=TECHNICIAN_PATH+"/removeById";
 
     private static final String ALL_PATH="/all";
@@ -43,6 +44,7 @@ public class UtilPath {
     public static final String GET_CUSTOMER_BY_TAX_CODE_PATH=CUSTOMER_PATH+"/get/taxCode";
     public static final String FIND_ALL_BY_NAME_AND_SURNAME_PATH=CUSTOMER_PATH+"/get/all/name&surname";
     public static final String FIND_CUSTOMER_BY_APARTMENT_ID_PATH=CUSTOMER_PATH+"/get/apartment/";
+    public static final String FIND_ALL_APARTMENTS_BY_CUSTOMER_ID = CUSTOMER_PATH+"/all/apartments/";
 
 
 
@@ -62,4 +64,7 @@ public class UtilPath {
     public static final String GET_SECRETARIES_ASSOCIATED_TO_TECHNICIAN = SECRETARY_PATH + "/getSecretariesOfTechnician/";
     public static final String CHANGE_TECHNICIAN_ASSIGNED_TO_INTERVENTION = SECRETARY_PATH + "/changeTechnicianAssignedToIntervention/";
     public static final String GET_ALL_INTERVENTIONS_SORTED_BY_DATE = SECRETARY_PATH + "/getAllInterventionsSortedByDate";
+    public static final String UPDATE_INTERVENTION = SECRETARY_PATH + "/updateIntervention";
+    public static final String GET_ALL_TECHNICIANS_AVAILABLE_IN_A_DATE = SECRETARY_PATH + "/getAllTechniciansAvailableInADate/";
+    public static final String GET_ALL_INTERVENTIONS_OF_DATE_OF_TECHNICIAN = SECRETARY_PATH + "/interventionsOfDateOfTechnician/";
 }

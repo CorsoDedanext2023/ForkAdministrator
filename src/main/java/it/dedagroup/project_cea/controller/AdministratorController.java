@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -80,9 +81,6 @@ public class AdministratorController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(administratorFacade.insertCondominium(request));
 	}
 	
-
-
-
 	//ENDPOINT DI INSERIMENTO DELLA BOLLETTA
 	@Operation(summary = "Inserimento <Bill> nel database.", description = "Questo endpoint consente l'inserimento di un nuova bolletta.")
 	@ApiResponses(value = {
@@ -153,16 +151,15 @@ public class AdministratorController {
     }
     
 
-
-	//   ENDPOINT DI SUDDIVISIONE BOLLETTE
-	@Operation(summary = "Metodo che splitta le bollette",description = "Questo endpoint prende in input una bolletta condominiale e l'id del condominio nella quale bisogna splittarla, se l'id del condominio non coincide va in eccezione e restituisce status code 404, altrimenti restiutisce status code 200 e una stringa che conferma la suddivisione")
+    //   ENDPOINT DI SUDDIVISIONE BOLLETTE
+    @Operation(summary = "Metodo che splitta le bollette",description = "Questo endpoint prende in input una bolletta condominiale, se l'id del condominio non esiste lancia un eccezione e restituisce status code 404, altrimenti restiutisce status code 200 e la lista di bollette splittate")
    @ApiResponses(value= {
-		   @ApiResponse(responseCode = "200",description = "Bollette splittate correttamente",content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = String.class))),
-		   @ApiResponse(responseCode = "Not Found(404)",description = "Nessun condominio co questo id",content = @Content(mediaType = MediaType.ALL_VALUE))
+		   @ApiResponse(responseCode = "200",description = "Lista bollette suddivise per appartamento",content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = String.class))),
+		   @ApiResponse(responseCode = "Not Found(404)",description = "Nessun condominio con questo id",content = @Content(mediaType = MediaType.ALL_VALUE))
    })
-    @PostMapping("/billSplitter/{idCondominium}")
-    public ResponseEntity<String> billSplitter(@PathVariable long idCondominium,@RequestBody AceaBillRequest request){
-        return ResponseEntity.ok(administratorFacade.billSplitter(idCondominium, request));
+    @PostMapping("/billSplitter")
+    public ResponseEntity<List<BillDTOResponse>> billSplitter(@RequestBody AceaBillRequest request){
+        return ResponseEntity.ok(administratorFacade.billSplitter(request));
     }
 
 
@@ -202,6 +199,13 @@ public class AdministratorController {
 	public ResponseEntity<CondominiumDtoResponse> CreateCondominium(@Valid @RequestBody AddCondominiumDTORequest request){
 		return ResponseEntity.status(HttpStatus.CREATED).body(administratorFacade.createCondominium(request));
 	}
+	@Operation(summary = "Eliminazione <Administrator>", description = "Questo endpoint permette la non visibilità dell'amministratore nel database")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200" , description = "Eliminazione dell'amministratore avvenuta", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = Administrator.class))),
+			@ApiResponse(responseCode = "400" , description = "Inserimento del parameter non valido"),
+			@ApiResponse(responseCode = "404" , description = "Amministratore non trovato nel database", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = MessageDtoResponse.class)))
+	})
+
 	/**
 	 * <h2> Metodo che elimina un amministratore e non lo rende visibile </h2>
 	 *
@@ -221,13 +225,21 @@ public class AdministratorController {
 		return ResponseEntity.status(HttpStatus.OK).body(administratorFacade.deleteAdministrator(id));
 	}
 
+	@Operation(summary = "Eliminazione <Condominium>", description = "Questo endpoint permette la non visibilità del condominio nel database e tutti gli appartamenti in relazione.")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "200" , description = "Eliminazione del condominio avvenuta", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = Condominium.class))),
+			@ApiResponse(responseCode = "400" , description = "Inserimento del parameter 'id' non valido"),
+			@ApiResponse(responseCode = "404" , description = "Condominio non trovato nel database", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = ResponseStatusException.class)))
+	})
+
 	/**
 	 * <h2> Metodo che elimina un condominio e non lo rende visibile </h2>
 	 *
 	 * <par>
 	 * Metodo che prende un id di un condominio e setta il boolean 'isAvailable' a 'false'
 	 * in modo che i dati di un condominio non vengano persi del tutto, ma non saranno visibili
-	 * in altre chiamate di ritorno degli amministratori.
+	 * in altre chiamate di ritorno dei condomini. Verranno settati nello stesso modo tutti gli
+	 * appartamenti che sono in relazione col condominio eliminato.
 	 * </par>
 	 * @param id, una variabile di tipo long 'id'
 	 * @return Una response che indica l'eliminazione di un condominio. Se l'id è stato trovato nel

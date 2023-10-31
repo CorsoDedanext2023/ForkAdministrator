@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import it.dedagroup.project_cea.dto.request.AddCustomerDtoRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +34,21 @@ public class CustomerMapper {
 		if(c == null || c.isEmpty())throw new NotValidDataException("List of customers is empty: "+c);
 		return c.stream().map(this::toDto).toList();
 	}
+
+	public Customer fromAddCustomerDTORequestToCustomer(AddCustomerDtoRequest request){
+		//TODO Da discutere l'aggiunta dell'appartamento in customer
+		//Apartment a = apartmentServiceDef.findById(request.getId_apartment());
+		Customer customer = new Customer();
+		//List<Apartment> apartments = new ArrayList<>();
+		//apartments.add(a);
+		customer.setName(request.getName());
+		customer.setSurname(request.getSurname());
+		customer.setUsername(request.getUsername());
+		customer.setPassword(request.getPassword());
+		customer.setTaxCode(request.getTaxCode());
+		//customerAdd.setApartments(apartments);
+		return customer;
+	}
 	
 	public List<CustomerExtendedInfoDTOResponse> toCustomerExtendedinfo(Customer c) {
 	    if (c == null) throw new NotValidDataException("Customer è vuoto");
@@ -54,7 +70,8 @@ public class CustomerMapper {
 	public List<CustomerExtendedInfoDTOResponse> toListCustomersExtendedinfo(List<Customer> c) {
 	    if (c == null || c.isEmpty()) throw new NotValidDataException("Lista dei customer è vuota");
 	    return c.stream()
-	            .flatMap(customer -> toCustomerExtendedinfo(customer).stream())
+	    		.filter(customer -> customer.isAvailable()==true)
+	            .flatMap(customerDto -> toCustomerExtendedinfo(customerDto).stream())
 	            .collect(Collectors.toList());
 	}
 }

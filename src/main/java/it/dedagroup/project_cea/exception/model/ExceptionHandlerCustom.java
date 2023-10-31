@@ -49,6 +49,13 @@ public class ExceptionHandlerCustom {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(m);
 	}
 
+	@ExceptionHandler(EmptyListException.class)
+	public ResponseEntity<MessageDtoResponse> emptyList(EmptyListException e){
+		MessageDtoResponse m = new MessageDtoResponse(e.getMessage(), HttpStatus.BAD_REQUEST.value(), e.getRequest(), LocalDateTime.now());
+		System.out.println(m);
+	return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(m);
+	}
+
 	//ExceptionHandler per gestire le ConstraintViolations(PathVariable e RequestParam)
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -61,6 +68,7 @@ public class ExceptionHandlerCustom {
 		}
 		return error;
 	}
+
 
 	/*
 	 @ExceptionHandler(ResponseStatusException.class)
