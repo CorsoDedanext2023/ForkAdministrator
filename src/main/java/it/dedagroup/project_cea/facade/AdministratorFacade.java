@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import it.dedagroup.project_cea.dto.response.*;
+import it.dedagroup.project_cea.model.Condominium;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +100,7 @@ public class AdministratorFacade {
 		return mapper.toDto(service.findByCondominiums_Id(id));
 	}
 
-	public List<BillDTOResponse> billSplitter( AceaBillRequest bill) {
+	public List<BillDTOResponse> billSplitter(AceaBillRequest bill) {
 		List<Bill> splittedBills=new ArrayList<>();
 		Condominium condominium=condominiumService.findById(bill.getIdCondominium());
 		double missingConsumption=bill.getCondominiumConsumption();
