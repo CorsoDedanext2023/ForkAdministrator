@@ -8,7 +8,6 @@ import lombok.Data;
 
 import java.util.List;
 
-//TODO implementare validation
 @Data
 public class AddCondominiumDTORequest {
 

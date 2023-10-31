@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import it.dedagroup.project_cea.dto.response.ValidationErrorDTOResponse;
 import it.dedagroup.project_cea.dto.response.ViolationDTOResponse;
 import jakarta.validation.ConstraintViolation;
@@ -19,8 +18,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
 import it.dedagroup.project_cea.dto.response.MessageDtoResponse;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestControllerAdvice
 public class ExceptionHandlerCustom {
@@ -61,7 +60,7 @@ public class ExceptionHandlerCustom {
 	@ExceptionHandler(ConstraintViolationException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	ValidationErrorDTOResponse onCostraintValidationException(ConstraintViolationException e){
+	ValidationErrorDTOResponse onConstraintValidationException(ConstraintViolationException e){
 		ValidationErrorDTOResponse error=new ValidationErrorDTOResponse();
 		for (ConstraintViolation violation:e.getConstraintViolations()) {
 			error.getViolations().add(
@@ -71,5 +70,12 @@ public class ExceptionHandlerCustom {
 	}
 
 
+	/*
+	 @ExceptionHandler(ResponseStatusException.class)
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	StatusExceptionDTOResponse onResponseStatusException(ResponseStatusException e){
 
+	 }
+	*/
 }

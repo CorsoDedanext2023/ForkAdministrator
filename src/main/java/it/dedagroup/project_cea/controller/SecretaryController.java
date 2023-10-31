@@ -4,7 +4,6 @@ import it.dedagroup.project_cea.dto.request.InterventionUpdateDTORequest;
 import it.dedagroup.project_cea.dto.response.*;
 import it.dedagroup.project_cea.facade.SecretaryFacade;
 import it.dedagroup.project_cea.model.Scan;
-import it.dedagroup.project_cea.model.Secretary;
 import it.dedagroup.project_cea.model.TypeOfIntervention;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
