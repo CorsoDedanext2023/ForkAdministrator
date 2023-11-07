@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface SecretaryRepository extends JpaRepository<Secretary, Long> {
     public List<Secretary> findAllByIntervention_Technician_IdAndIsAvailableTrue(long idTechnician);
     public Optional<Secretary> findByIdAndIsAvailableTrue(long idSecretary);
+    public Optional<Secretary> findByUsername(String username);
 }

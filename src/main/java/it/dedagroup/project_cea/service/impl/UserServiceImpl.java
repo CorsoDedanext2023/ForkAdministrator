@@ -36,5 +36,14 @@ public class UserServiceImpl implements UserServiceDef{
 		else if(user instanceof Technician) technicianRepository.save((Technician)user);
 		else if(user instanceof Customer) customerRepository.save((Customer)user);
 	}
+	
+	public User changePassword (User user) {
+		if(user instanceof Secretary) secretaryRepository.save((Secretary)user);
+		else if(user instanceof Administrator) administratorRepository.save((Administrator)user);
+		else if(user instanceof Technician) technicianRepository.save((Technician)user);
+		else if(user instanceof Customer) customerRepository.save((Customer)user);
+		return user;
+	
+	}
 
 }

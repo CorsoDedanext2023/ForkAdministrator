@@ -109,5 +109,10 @@ public class TechnicianServiceImpl implements TechnicianServiceDef{
 		techRepo.save(tech);
 	}
 
+	@Override
+	public Technician findTechnicianByUsername(String username) {
+		return techRepo.findTechnicianByUsername(username).orElse(null);
+	}
+
 
 }

@@ -11,4 +11,5 @@ import it.dedagroup.project_cea.model.Administrator;
 
 public interface AdministratorRepository extends JpaRepository<Administrator, Long>{
 	public Optional<Administrator> findByCondominiums_Id(long id);
+	public Optional<Administrator> findByUsername(String username);
 }

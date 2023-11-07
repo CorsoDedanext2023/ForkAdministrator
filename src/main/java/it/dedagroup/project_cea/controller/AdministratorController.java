@@ -146,8 +146,30 @@ public class AdministratorController {
     @Operation(summary = "Metodo che splitta le bollette",description = "Questo endpoint prende in input una bolletta condominiale, se l'id del condominio non esiste lancia un eccezione e restituisce status code 404, altrimenti restiutisce status code 200 e la lista di bollette splittate")
    @ApiResponses(value= {
 		   @ApiResponse(responseCode = "200",description = "Lista bollette suddivise per appartamento",content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,schema = @Schema(implementation = String.class))),
-		   @ApiResponse(responseCode = "Not Found(404)",description = "Nessun condominio con questo id",content = @Content(mediaType = MediaType.ALL_VALUE))
+		   @ApiResponse(responseCode = "Not Found(404)",description = "Nessun condominio con questo id",content = @Content(mediaType = MediaType.ALL_VALUE)),
+		   @ApiResponse(responseCode = "500", description = "Errore interno del server.")
    })
+    /**
+   	 * <h2> Metodo che permette la suddivisione di una bolletTa in un condominio</h2>
+   	 * 
+   	 * <par>
+   	 * Metodo che prende una request il cui corpo è formato da 5 attributi: double cost(variabile che rappresenta l'importo totale della bolletta), long idCondominium(variabile che rappresenta l'id del condominio 
+   	 * che servirà a trovare il condominio in cui splittare la bolletta), double condominiumConsuption(variabile che rappresenta il consumo totale del condominio),LocalDate deliveryDate(variabile che rappresenta
+   	 * la data di consegna della bolleta, utile per verificare la corrispondenza con le letture degli appartamenti),LocalDate paymentDate(variabile che rappresenta la data entro la quale è possibile pagare la bolletta).
+   	 * Questo metodo per iniziare controlla che il condominio esista nel sistema, dopodichè inizializziamo una variabile che conterrà, nel caso in cui degli appartamenti non hanno una lettura valida, il consumo 
+   	 * che manca a coprire il totale del condominio, che sarà successivamente diviso in proporzione agli eventuali appartamenti. 	
+   	 * Successivamente usiamo due liste, una che conterrà gli appartamenti con lettura valida e un'altra con gli appartamenti con lettura non valida, la validità delle letture viene controllata usando degli stream 
+   	 * che filtrano gli appartamenti confrontando la data dell'ultima lettura con la data di consegna della request in input.
+   	 * Infine procediamo al calcolo della bolletta di ogni appartamento:
+   	 * - per quelli con lettura valida, usiamo un calcolo che effettua la divisone tra il consumo del singolo appartamento e il consumo totale del condominio, in modo da trovarci la frazione corrispondente alla 
+   	 *  quota in termini di consumo del singolo appartamento rispetto al condominio, successivamente troveremo la quota del singolo appartamento effettuando il prodotto tra la frazione e l'importo totale della bolletta.
+   	 *  -per quelli con lettura non valida verrà eseguito lo stesso calcolo sostituendo il consumo del singolo appartamento con il consumo mancante, fratto il numero degli appartamenti con lettura non valida.
+   	 *  
+   	 * </par>
+   	 * @param request, un'istanza della classe AceaBillRequest che conterrà degli attributi con i dettagli della bolletta
+   	 * @return Una response che rappresenterà le bollette splittate per ogni appartamento . Se l'id del condominio è stato trovato nel
+   	 * database, ritornernà una lista di BillDTOResponse. Se invece non viene trovato, viene restituito una codice di risposta di risposta 404 NOT FOUND.
+   	 */
     @PostMapping("/billSplitter")
     public ResponseEntity<List<BillDTOResponse>> billSplitter(@RequestBody AceaBillRequest request){
         return ResponseEntity.ok(administratorFacade.billSplitter(request));
@@ -173,7 +195,7 @@ public class AdministratorController {
 	}
 	//TODO da sostituire la responseEntity con un dto del customer con l'id del nuovo appartamento
 	@PostMapping(CREATE_CONDOMINIUM)
-	public ResponseEntity<String> CreateCondominium(@Valid @RequestBody AddCondominiumDTORequest request){
+	public ResponseEntity<String> createCondominium(@Valid @RequestBody AddCondominiumDTORequest request){
 		administratorFacade.createCondominium(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body("Condominio Aggiunto con successo.");
 	}
